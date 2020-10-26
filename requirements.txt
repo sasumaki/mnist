@@ -1,0 +1,8 @@
+seldon-core==v1.2.3
+numpy
+pillow
+opencv-python
+joblib
+typing
+onnx
+onnxruntime

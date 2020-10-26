@@ -1,0 +1,60 @@
+name: Release application
+
+on:
+  push:
+
+jobs:
+  build-publish-deploy:
+    name: Build, Publish and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v2
+
+    - 
+      run: ls -la
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - 
+      name: Push to Docker Hub
+      uses: docker/build-push-action@v1
+      with:
+        path: mnist
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: sasumaki/mnist
+        tag_with_sha: true
+    - 
+      name: Get Git Short SHA
+      id: slug
+      run: echo "::set-output name=sha7::$(echo ${{ github.sha }} | cut -c1-7)"
+
+    - 
+      name: Set up Kustomize
+      working-directory: ./staging-cluster/mnist
+      run: |-
+        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+    - 
+      name: Set image to manifest
+      working-directory: ./staging-cluster/mnist
+      run: |-
+        ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
+
+    - 
+      name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -am "Bump docker image tag ${{ steps.slug.outputs.sha7 }}"
+
+    - 
+      name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

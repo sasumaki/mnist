@@ -1,0 +1,40 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  name: mnist-model
+  namespace: seldon-system
+spec:
+  name: mnist-model
+  predictors:
+  - componentSpecs:
+    - spec:
+        containers:
+        - name: mnist
+          image: MODEL_IMAGE
+          env:
+            - name: AWS_ACCESS_KEY_ID # ENV name passed to container
+              valueFrom:
+                secretKeyRef:
+                  name: seldon-init-container-secret
+                  key: AWS_ACCESS_KEY_ID # ENV name in the secret
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: seldon-init-container-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_ENDPOINT_URL
+              value: http://minio.minio.svc.cluster.local:9000
+    graph:
+      children: []
+      modelUri: s3://models/modelsad-1603460758/
+      envSecretRefName: seldon-init-container-secret
+      endpoint:
+        type: REST
+      parameters:
+        - name: model_uri
+          type: STRING
+          value: s3://models/modelsad-1603460758/
+      name: mnist
+      type: MODEL
+    name: mnist
+    replicas: 1
