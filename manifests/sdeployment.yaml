@@ -26,14 +26,14 @@ spec:
               value: http://minio.minio.svc.cluster.local:9000
     graph:
       children: []
-      modelUri: s3://models/modelsad-1603460758/
+      modelUri: s3://models/modelsad-1603715435/
       envSecretRefName: seldon-init-container-secret
       endpoint:
         type: REST
       parameters:
         - name: model_uri
           type: STRING
-          value: s3://models/modelsad-1603460758/
+          value: s3://models/modelsad-1603715435/
       name: mnist
       type: MODEL
     name: mnist
