@@ -23,7 +23,7 @@ spec:
                   name: seldon-init-container-secret
                   key: AWS_SECRET_ACCESS_KEY
             - name: AWS_ENDPOINT_URL
-              value: http://minio.minio.svc.cluster.local:9000
+              value:  https://s3.eu-west-2.amazonaws.com/
     graph:
       children: []
       modelUri: s3://aiga-models/mnist1
