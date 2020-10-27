@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
 - ./sdeployment.yaml
 - ./gateway.yaml
-- ./deployment-secret.yaml
+- ./deployment-secret-sealed.yaml
 
 images:
 - name: MODEL_IMAGE
