@@ -11,23 +11,23 @@ spec:
         containers:
         - name: mnist
           image: MODEL_IMAGE
-          # env:
-          #   - name: AWS_ACCESS_KEY_ID # ENV name passed to container
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: seldon-init-container-secret
-          #         key: AWS_ACCESS_KEY_ID # ENV name in the secret
-          #   - name: AWS_SECRET_ACCESS_KEY
-          #     valueFrom:
-          #       secretKeyRef:
-          #         name: seldon-init-container-secret
-          #         key: AWS_SECRET_ACCESS_KEY
-          #   - name: AWS_ENDPOINT_URL
-          #     value: http://minio.minio.svc.cluster.local:9000
+          env:
+            - name: AWS_ACCESS_KEY_ID # ENV name passed to container
+              valueFrom:
+                secretKeyRef:
+                  name: seldon-init-container-secret
+                  key: AWS_ACCESS_KEY_ID # ENV name in the secret
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: seldon-init-container-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: AWS_ENDPOINT_URL
+              value: http://minio.minio.svc.cluster.local:9000
     graph:
       children: []
       modelUri: s3://aiga-models/mnist1
-      # envSecretRefName: seldon-init-container-secret
+      envSecretRefName: seldon-init-container-secret
       endpoint:
         type: REST
       parameters:
