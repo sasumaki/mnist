@@ -9,3 +9,7 @@ images:
 - name: MODEL_IMAGE
   newName: sasumaki/mnist
   newTag: sha-f7311d5
+
+- name: SHADOW_MODEL_IMAGE
+  newName: sasumaki/mnist
+  newTag: sha-f7311d5
