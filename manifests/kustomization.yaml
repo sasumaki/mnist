@@ -9,7 +9,7 @@ resources:
 images:
 - name: MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-8da4d5f
+  newTag: sha-89e0280
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-f7311d5
+  newTag: sha-89e0280
