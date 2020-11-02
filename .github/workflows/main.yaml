@@ -66,7 +66,13 @@ jobs:
 
     - 
      uses: actions/checkout@v2
-    
+     
+    - 
+      name: Set up Kustomize
+      working-directory: ./manifests
+      run: |-
+        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
     -
       name: Update image
       working-directory: ./manifests
