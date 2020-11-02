@@ -12,4 +12,4 @@ images:
   newTag: sha-ecfee23
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-ecfee23
+  newTag: sha-0cb02b0
