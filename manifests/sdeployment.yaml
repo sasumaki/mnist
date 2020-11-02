@@ -67,7 +67,7 @@ spec:
         - name: model_uri
           type: STRING
           value: s3://aiga-models/mnist1
-      name: mnist
+      name: shadow_mnist
       type: MODEL
     name: shadow_mnist
     shadow: true
