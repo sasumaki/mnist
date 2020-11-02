@@ -65,8 +65,8 @@ jobs:
         base: main
 
     - 
-     uses: actions/checkout@v2
-     
+      uses: actions/checkout@v2
+
     - 
       name: Set up Kustomize
       working-directory: ./manifests
@@ -74,10 +74,11 @@ jobs:
         curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
     -
-      name: Update image
+      name: Update images
       working-directory: ./manifests
       run: |-
         ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
+        ./kustomize edit set image SHADOW_MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
 
     - 
       name: Commit files
