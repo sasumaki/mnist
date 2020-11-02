@@ -58,7 +58,6 @@ spec:
             - name: AWS_ENDPOINT_URL
               value:  https://s3.eu-west-2.amazonaws.com/
     graph:
-      shadow: true
       children: []
       modelUri: s3://aiga-models/mnist1
       envSecretRefName: seldon-init-container-secret
@@ -70,7 +69,8 @@ spec:
           value: s3://aiga-models/mnist1
       name: mnist
       type: MODEL
-    name: mnist
+    name: shadow_mnist
+    shadow: true
     replicas: 1
 
       
