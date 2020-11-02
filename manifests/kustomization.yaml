@@ -5,11 +5,11 @@ resources:
 - ./gateway.yaml
 - ./deployment-secret-sealed.yaml
 
+
 images:
 - name: MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-f7311d5 
-
+  newTag: sha-ecfee23
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-f7311d5
+  newTag: sha-ecfee23
