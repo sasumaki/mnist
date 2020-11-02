@@ -34,28 +34,18 @@ jobs:
     if: contains(github.ref, "staging")
     steps:
     - 
+      uses: actions/checkout@v2
+    - 
       name: Get Git Short SHA
       id: slug
       run: echo "::set-output name=sha7::$(echo ${{ github.sha }} | cut -c1-7)"
 
     - 
       name: Set up Kustomize
-      working-directory: ./staging-cluster/mnist
+      working-directory: ./manifests
       run: |-
         curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
-    - 
-      name: Set image to staging
-      working-directory: ./staging-cluster/mnist
-      run: |-
-        ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
-
-    - 
-      name: Set shadow to production
-      working-directory: ./production-cluster/mnist
-      run: |-
-        ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
-
 
     - 
       name: Commit files
@@ -63,12 +53,16 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -am "Bump docker image tag ${{ steps.slug.outputs.sha7 }}"
+    -
+        name: Set shadow to production
+        working-directory: ./manifests
+        run: |-
+          ./kustomize edit set image SHADOW_MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
 
-    - 
-      name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }}
 
-  
+
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with: 
+        branch: main
