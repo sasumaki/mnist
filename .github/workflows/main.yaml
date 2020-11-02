@@ -56,13 +56,33 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git commit -am "New shadow PR ${{ steps.slug.outputs.sha7 }}"
+        git commit -am "New shadow ${{ steps.slug.outputs.sha7 }}"
  
     - 
       name: Create Pull Request
       uses: peter-evans/create-pull-request@v3
       with: 
-        branch: main
+        base: main
 
+    - 
+     uses: actions/checkout@v2
+    
+    -
+      name: Update image
+      working-directory: ./manifests
+      run: |-
+        ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
 
-      
+    - 
+      name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -am "Image ${{ steps.slug.outputs.sha7 }}"
+
+    - 
+      name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
