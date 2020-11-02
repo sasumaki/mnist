@@ -3,13 +3,11 @@ kind: Kustomization
 resources:
 - ./sdeployment.yaml
 - ./gateway.yaml
-- ./deployment-secret-sealed.yaml
-
 
 images:
 - name: MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-ecfee23
+  newTag: sha-6748e07
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-0cb02b0
+  newTag: sha-6748e07
