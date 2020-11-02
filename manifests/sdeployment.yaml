@@ -24,8 +24,25 @@ spec:
                   key: AWS_SECRET_ACCESS_KEY
             - name: AWS_ENDPOINT_URL
               value:  https://s3.eu-west-2.amazonaws.com/
-        - name: shadow_mnist
-          shadow: true
+    graph:
+      children: []
+      modelUri: s3://aiga-models/mnist1
+      envSecretRefName: seldon-init-container-secret
+      endpoint:
+        type: REST
+      parameters:
+        - name: model_uri
+          type: STRING
+          value: s3://aiga-models/mnist1
+      name: mnist
+      type: MODEL
+    name: mnist
+    replicas: 1
+
+  - componentSpecs:
+    - spec:
+        containers:
+        - name: shadow-mnist
           image: SHADOW_MODEL_IMAGE
           env:
             - name: AWS_ACCESS_KEY_ID # ENV name passed to container
@@ -50,7 +67,10 @@ spec:
         - name: model_uri
           type: STRING
           value: s3://aiga-models/mnist1
-      name: mnist
+      name: shadow-mnist
       type: MODEL
-    name: mnist
+    name: shadow-mnist
+    shadow: true
     replicas: 1
+
+      
