@@ -3,6 +3,7 @@ on: [pull_request, push]
 
 jobs:
   test:
+    needs: build-publish
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -19,7 +20,8 @@ jobs:
     - name: install istio to cluster
       run: |
         curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.7.4 sh -
-        ./istio-1.7.4/istioctl install --set profile=demo
+        export PATH="$PATH:/home/runner/work/mnist/mnist/istio-1.7.4/bin"
+        istioctl install --set profile=demo
 
     - name: install seldon to cluster
       run: |
