@@ -6,3 +6,4 @@ joblib
 typing
 onnx
 onnxruntime
+matplotlib
