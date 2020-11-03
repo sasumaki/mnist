@@ -92,6 +92,7 @@ jobs:
       run: |-
         kubectl get deployment --all-namespaces
         kubectl get secret -n seldon-system
+        kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
         kubectl rollout status deployment mnist-model-mnist-0-mnist -n seldon-system
 
   bump-staging-images:
