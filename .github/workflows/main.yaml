@@ -50,13 +50,13 @@ jobs:
     - name: install seldon to cluster
       run: |
         kubectl create namespace seldon-system
+        helm repo update
         helm install seldon-core seldon-core-operator \
           --repo https://storage.googleapis.com/seldon-charts \
           --set usageMetrics.enabled=false \
           --set istio.enabled=true \
           --namespace seldon-system
-        helm install helm-charts/seldon-core-operator seldon-core-operator
-
+        kubectl rollout status deploy/seldon-controller-manager -n seldon-system
     - 
       name: Set up Kustomize
       working-directory: ./manifests
