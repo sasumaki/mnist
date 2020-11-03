@@ -1,6 +1,5 @@
 from seldon_core.seldon_client import SeldonClient
 import numpy as np
-import matplotlib.pyplot as plt
 import json
 import tensorflow_datasets as tfds
 import random
