@@ -6,5 +6,5 @@ joblib
 typing
 onnx
 onnxruntime
-matplotlib
 tensorflow
+tensorflow-datasets
