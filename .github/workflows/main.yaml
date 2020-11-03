@@ -2,6 +2,7 @@ name: Release application
 on:
   push:
 
+
 jobs:
   build-publish:
     name: Build, Publish and Deploy
@@ -28,6 +29,9 @@ jobs:
         tag_with_sha: true
 
   test:
+    strategy:
+      matrix:
+        python-version: [3.8]
     needs: build-publish
     runs-on: ubuntu-latest
     steps:
@@ -100,14 +104,30 @@ jobs:
         kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
         kubectl get pods -n seldon-system
         kubectl rollout status deployment mnist-model-mnist-0-mnist -n seldon-system
+
     - name: docker ps
       run: docker ps
 
-    - name: pip install
-      run: pip install -r requirements.txt
-    
-    - name: python client-test.py
-      run: python client-test.py
+ 
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        pytest client-test.py
 
   bump-staging-images:
     runs-on: ubuntu-latest

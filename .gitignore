@@ -1,3 +1,5 @@
 MNIST_data
 .vscode
 spellbook.txt
+__pycache__
+.cache
