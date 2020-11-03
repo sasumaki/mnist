@@ -91,7 +91,7 @@ jobs:
     - name: Sleep for 15 seconds
       uses: jakejarvis/wait-action@master
       with:
-        time: '30s'
+        time: '45s'
 
     - name: watch
       run: |-
@@ -99,8 +99,7 @@ jobs:
         kubectl get secret -n seldon-system
         kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
         kubectl get pods -n seldon-system
-        kubectl rollout status pod mnist-model -n seldon-system
-
+        kubectl rollout status deployment mnist-model-mnist-0-mnist -n seldon-system
     - name: docker ps
       run: docker ps
 
