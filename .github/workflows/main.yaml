@@ -102,7 +102,7 @@ jobs:
     - name: watch
       run: |-
         kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
-        
+
     - name: Sleep for 15 seconds
       uses: jakejarvis/wait-action@master
       with:
@@ -111,6 +111,8 @@ jobs:
     - name: watch
       run: |-
         kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
+        kubectl get pods -n seldon-system
+        kubectl describe pod mnist-model -n seldon-system
 
   bump-staging-images:
     runs-on: ubuntu-latest
