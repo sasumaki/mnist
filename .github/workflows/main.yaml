@@ -56,6 +56,17 @@ jobs:
           --set istio.enabled=true \
           --namespace seldon-system
         kubectl rollout status deploy/seldon-controller-manager -n seldon-system
+
+    - name: apply secrets to the cluster
+      run: | 
+        kubectl -n seldon-system create secret generic seldon-init-container-secret \
+        --from-literal=AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS }} \
+        --from-literal=AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET }} \
+        --from-literal=AWS_ENDPOINT_URL=https://s3.eu-west-2.amazonaws.com \
+        --from-literal=USE_SSL=true 
+                
+        
+
     - 
       name: Set up Kustomize
       working-directory: ./manifests
@@ -80,6 +91,7 @@ jobs:
     - name: watch
       run: |-
         kubectl get deployment --all-namespaces
+        kubectl get secret -n seldon-system
         kubectl rollout status deployment mnist-model-mnist-0-mnist -n seldon-system
 
   bump-staging-images:
