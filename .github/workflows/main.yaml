@@ -71,7 +71,7 @@ jobs:
 
     - name: Apply deployment to cluster
       run: |
-        kubectl apply -f ./manifests
+        kubectl apply -k ./manifests
 
     - name: watch
       run: |-
