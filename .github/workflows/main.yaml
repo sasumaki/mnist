@@ -72,6 +72,10 @@ jobs:
     - name: Apply deployment to cluster
       run: |
         kubectl apply -k ./manifests
+    - name: Sleep for 15 seconds
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '15s'
 
     - name: watch
       run: |-
