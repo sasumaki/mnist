@@ -108,6 +108,7 @@ jobs:
       run: pip install -r requirements.txt
     
     - name: python client-test.py
+      run: python client-test.py
 
   bump-staging-images:
     runs-on: ubuntu-latest
