@@ -26,14 +26,19 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: sasumaki/mnist
         tag_with_sha: true
+
   test:
     needs: build-publish
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: engineerd/setup-kind@v0.4.0
-      with:
-          version: "v0.7.0"
+
+    - name: download and install k3d
+      run: curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+    
+    - name: create cluster
+      run: k3d cluster create testing --port '8082:30080@agent[0]' -p 8081:80@loadbalancer --agents 2 --k3s-server-arg '--no-deploy=traefik'
+
     - name: Testing
       run: |
         kubectl cluster-info
@@ -86,33 +91,23 @@ jobs:
     - name: Sleep for 15 seconds
       uses: jakejarvis/wait-action@master
       with:
-        time: '15s'
+        time: '30s'
 
     - name: watch
       run: |-
         kubectl get deployment --all-namespaces
         kubectl get secret -n seldon-system
         kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
-
-    - name: Sleep for 15 seconds
-      uses: jakejarvis/wait-action@master
-      with:
-        time: '15s'
-
-    - name: watch
-      run: |-
-        kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
-
-    - name: Sleep for 15 seconds
-      uses: jakejarvis/wait-action@master
-      with:
-        time: '15s'
-        
-    - name: watch
-      run: |-
-        kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
         kubectl get pods -n seldon-system
-        kubectl describe pod mnist-model -n seldon-system
+        kubectl rollout status pod mnist-model -n seldon-system
+
+    - name: docker ps
+      run: docker ps
+
+    - name: pip install
+      run: pip install -r requirements.txt
+    
+    - name: python client-test.py
 
   bump-staging-images:
     runs-on: ubuntu-latest
