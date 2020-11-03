@@ -74,7 +74,11 @@ jobs:
         --from-literal=AWS_ENDPOINT_URL=https://s3.eu-west-2.amazonaws.com \
         --from-literal=USE_SSL=true 
                 
-        
+    - 
+      name: Get Git Short SHA
+      id: slug
+      run: echo "::set-output name=sha7::$(echo ${{ github.sha }} | cut -c1-7)"
+
 
     - 
       name: Set up Kustomize
@@ -92,7 +96,8 @@ jobs:
     - name: Apply deployment to cluster
       run: |
         kubectl apply -k ./manifests
-    - name: Sleep for 15 seconds
+
+    - name: Sleep for 120 seconds
       uses: jakejarvis/wait-action@master
       with:
         time: '120s'
