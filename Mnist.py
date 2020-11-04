@@ -30,7 +30,7 @@ class Mnist(SeldonComponent):
     self.load()
 
   def load(self):
-    print("load")
+    print("yoolo")
     print(self.model_uri)
     
     model_file = os.path.join(seldon_core.Storage.download(self.model_uri), "model.onnx")
