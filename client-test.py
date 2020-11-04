@@ -28,7 +28,6 @@ def test():
     print("predicted: ", prediction, "Truth: ", int(label))
     if prediction == int(label):
       corrects = corrects + 1
-  warnings.warn("Sanity checks")
-  warnings.warn(corrects/test_size)
+ 
   print(corrects/test_size)
   assert(corrects/test_size > 0.9)
