@@ -10,4 +10,4 @@ images:
   newTag: sha-d68b06c
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-1858cf7
+  newTag: sha-5e38ad8
