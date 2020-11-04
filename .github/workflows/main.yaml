@@ -2,6 +2,7 @@ name: Release application
 on:
   push:
 
+
 jobs:
   build-publish:
     name: Build, Publish and Deploy
@@ -26,10 +27,116 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         repository: sasumaki/mnist
         tag_with_sha: true
-  
+
+  test:
+    strategy:
+      matrix:
+        python-version: [3.8]
+    needs: build-publish
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+
+    - name: download and install k3d
+      run: curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+    
+    - name: create cluster
+      run: k3d cluster create testing --port '8082:30080@agent[0]' -p 8081:80@loadbalancer --agents 2 --k3s-server-arg '--no-deploy=traefik'
+
+    - name: Testing
+      run: |
+        kubectl cluster-info
+        kubectl get pods -n kube-system
+        echo "current-context:" $(kubectl config current-context)
+        echo "environment-kubeconfig:" ${KUBECONFIG}
+
+    - name: install istio to cluster
+      run: |
+        curl -L https://istio.io/downloadIstio | ISTIO_VERSION=1.7.4 sh -
+        export PATH="$PATH:/home/runner/work/mnist/mnist/istio-1.7.4/bin"
+        istioctl install --set profile=demo
+
+    - name: install seldon to cluster
+      run: |
+        kubectl create namespace seldon-system
+        helm install seldon-core seldon-core-operator \
+          --repo https://storage.googleapis.com/seldon-charts \
+          --set usageMetrics.enabled=false \
+          --set istio.enabled=true \
+          --namespace seldon-system
+        kubectl rollout status deploy/seldon-controller-manager -n seldon-system
+
+    - name: apply secrets to the cluster
+      run: | 
+        kubectl -n seldon-system create secret generic seldon-init-container-secret \
+        --from-literal=AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS }} \
+        --from-literal=AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET }} \
+        --from-literal=AWS_ENDPOINT_URL=https://s3.eu-west-2.amazonaws.com \
+        --from-literal=USE_SSL=true 
+                
+    - 
+      name: Get Git Short SHA
+      id: slug
+      run: echo "::set-output name=sha7::$(echo ${{ github.sha }} | cut -c1-7)"
+
+
+    - 
+      name: Set up Kustomize
+      working-directory: ./manifests
+      run: |-
+        curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+
+    -
+      name: Update images
+      working-directory: ./manifests
+      run: |-
+        ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
+
+    - name: Apply deployment to cluster
+      run: |
+        kubectl apply -k ./manifests
+
+    - name: Sleep for 120 seconds
+      uses: jakejarvis/wait-action@master
+      with:
+        time: '120s'
+
+    - name: watch
+      run: |-
+        kubectl get deployment --all-namespaces
+        kubectl get secret -n seldon-system
+        kubectl describe deployment mnist-model-mnist-0-mnist -n seldon-system
+        kubectl get pods -n seldon-system
+        # kubectl rollout status deployment mnist-model-mnist-0-mnist -n seldon-system
+
+    - name: docker ps
+      run: docker ps
+
+ 
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8 pytest
+        if [ -f requirements_test.txt ]; then pip install -r requirements_test.txt; fi
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        pytest client-test.py
+
   bump-staging-images:
     runs-on: ubuntu-latest
-    needs: [build-publish]
+    needs: [build-publish, test]
     if: contains(github.ref, 'staging')
     steps:
     - 
