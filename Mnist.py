@@ -32,8 +32,8 @@ class Mnist(SeldonComponent):
 
     self._model = model_file
     self.session = rt.InferenceSession(self._model, None)
-    self.input_name = session.get_inputs()[0].name
-    self.output_name = session.get_outputs()[0].name
+    self.input_name = self.session.get_inputs()[0].name
+    self.output_name = self.session.get_outputs()[0].name
     self.ready = True
     print("init and model loading done!!!")
 
