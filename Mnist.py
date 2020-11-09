@@ -82,7 +82,7 @@ class Mnist(SeldonComponent):
             region=os.getenv("AWS_REGION", ""),
             secure=use_ssl,
         )
-  def _download_model(self, uri, temp_dir: str):
+  def _download_model(self, uri, temp_dir: str = None):
     client = self._create_minio_client()
     bucket_args = uri.replace("s3://", "", 1).split("/", 1)
     bucket_name = bucket_args[0]
