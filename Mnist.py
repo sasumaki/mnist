@@ -13,8 +13,10 @@ from urllib.parse import urlparse
 from seldon_core.utils import getenv
 import onnxruntime as rt
 import time
-# from minio import Minio
-# from minio.error import ResponseError
+from minio import Minio
+import tempfile
+
+
 logger = logging.getLogger(__name__)
 
 class Mnist(SeldonComponent):
@@ -24,21 +26,9 @@ class Mnist(SeldonComponent):
     self.model_uri = model_uri
     self.method = method
     self.ready = False
-
-
-    # s3Client = Minio(
-    #     's3.amazonaws.com',
-    #     access_key=os.getenv("AWS_ACCESS_KEY_ID", ""),
-    #     secret_key=os.getenv("AWS_SECRET_ACCESS_KEY", ""),
-    #     secure=True,
-    # )
-    model_file = os.path.join(self.model_uri, "model.onnx")
+    out_dir = tempfile.mkdtemp()
     
-    # try:
-    # response = minio.get_object('foo', 'bar')
-    # finally:
-    #   response.close()
-    #   response.release_conn()
+    model_file =  os.path.join(_download_model(self.model_uri, out_dir), "model.onnx")
 
     self._model = model_file
     self.session = rt.InferenceSession(self._model, None)
@@ -76,3 +66,46 @@ class Mnist(SeldonComponent):
 
   def tags(self,X):
     return {"model_uri": self.model_uri}
+    
+  def _create_minio_client():
+        # Adding prefixing "http" in urlparse is necessary for it to be the netloc
+        url = urlparse(os.getenv("AWS_ENDPOINT_URL", "http://s3.amazonaws.com"))
+        use_ssl = (
+            url.scheme == "https"
+            if url.scheme
+            else bool(getenv("USE_SSL", "S3_USE_HTTPS", "false"))
+        )
+        return Minio(
+            url.netloc,
+            access_key=os.getenv("AWS_ACCESS_KEY_ID", ""),
+            secret_key=os.getenv("AWS_SECRET_ACCESS_KEY", ""),
+            region=os.getenv("AWS_REGION", ""),
+            secure=use_ssl,
+        )
+  def _download_model(uri, temp_dir: str):
+    client = _create_minio_client()
+    bucket_args = uri.replace(_S3_PREFIX, "", 1).split("/", 1)
+    bucket_name = bucket_args[0]
+    bucket_path = bucket_args[1] if len(bucket_args) > 1 else ""
+    objects = client.list_objects(bucket_name, prefix=bucket_path, recursive=True)
+    count = 0
+    for obj in objects:
+        # Replace any prefix from the object key with temp_dir
+        subdir_object_key = obj.object_name.replace(bucket_path, "", 1).strip("/")
+        # fget_object handles directory creation if does not exist
+        if not obj.is_dir:
+            if subdir_object_key == "":
+                subdir_object_key = obj.object_name
+            client.fget_object(
+                bucket_name,
+                obj.object_name,
+                os.path.join(temp_dir, subdir_object_key),
+            )
+        count = count + 1
+    if count == 0:
+        raise RuntimeError(
+            "Failed to fetch model. \
+            The path or model %s does not exist."
+            % (uri)
+        )
+    return temp_dir

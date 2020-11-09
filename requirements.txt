@@ -6,5 +6,4 @@ joblib
 typing
 onnx
 onnxruntime
-
-
+minio
