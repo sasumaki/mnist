@@ -84,7 +84,7 @@ class Mnist(SeldonComponent):
         )
   def _download_model(uri, temp_dir: str):
     client = _create_minio_client()
-    bucket_args = uri.replace(_S3_PREFIX, "", 1).split("/", 1)
+    bucket_args = uri.replace("s3://", "", 1).split("/", 1)
     bucket_name = bucket_args[0]
     bucket_path = bucket_args[1] if len(bucket_args) > 1 else ""
     objects = client.list_objects(bucket_name, prefix=bucket_path, recursive=True)
