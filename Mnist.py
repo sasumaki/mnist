@@ -28,7 +28,7 @@ class Mnist(SeldonComponent):
     self.ready = False
     out_dir = tempfile.mkdtemp()
     
-    model_file =  os.path.join(_download_model(self.model_uri, out_dir), "model.onnx")
+    model_file =  os.path.join(self._download_model(self.model_uri, out_dir), "model.onnx")
 
     self._model = model_file
     self.session = rt.InferenceSession(self._model, None)
@@ -82,8 +82,8 @@ class Mnist(SeldonComponent):
             region=os.getenv("AWS_REGION", ""),
             secure=use_ssl,
         )
-  def _download_model(uri, temp_dir: str):
-    client = _create_minio_client()
+  def _download_model(self, uri, temp_dir: str):
+    client = self._create_minio_client()
     bucket_args = uri.replace("s3://", "", 1).split("/", 1)
     bucket_name = bucket_args[0]
     bucket_path = bucket_args[1] if len(bucket_args) > 1 else ""
