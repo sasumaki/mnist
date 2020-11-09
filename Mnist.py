@@ -57,5 +57,6 @@ class Mnist(SeldonComponent):
         {"type":"GAUGE","key":"mygauge","value":100}, # a gauge which will be set to given value
         {"type":"TIMER","key":"mytimer","value":20.2}, # a timer which will add sum and count metrics - assumed millisecs
       ]
-     def tags(self,X):
-        return {"model_uri": self.model_uri}
+      
+  def tags(self,X):
+    return {"model_uri": self.model_uri}
