@@ -45,7 +45,7 @@ class Mnist(SeldonComponent):
 
     res = session.run([output_name], {input_name: X.astype('float32')})
 
-    runtime_metrics = = {"type": "TIMER", "key": "prediction_time", "value": (time.time() - start_time)}
+    runtime_metrics = = {"type": "TIMER", "key": "prediction_time", "value": (time.time() - start_time) * 1000}
 
     return SeldonResponse(data=res, metrics=runtime_metrics)
 
