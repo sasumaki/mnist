@@ -73,10 +73,11 @@ class Mnist(SeldonComponent):
   def tags(self):
     print(self.metadata())
     print(self.mdata)
-    return {
+    tag = {
       "model_uri": self.model_uri,
       "model_version": self.mdata["versions"][0]
       }
+    return {"model_uri": self.model_uri}
     
   def _create_minio_client(self):
         # Adding prefixing "http" in urlparse is necessary for it to be the netloc
