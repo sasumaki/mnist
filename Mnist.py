@@ -44,9 +44,11 @@ class Mnist(SeldonComponent):
             with open(file_path, "r") as f:
                 return yaml.safe_load(f.read())
         except FileNotFoundError:
+          print(f"metadata file {file_path} does not exist")
             logger.debug(f"metadata file {file_path} does not exist")
             return {}
         except yaml.YAMLError:
+          print( f"metadata file {file_path} present but does not contain valid yaml")
             logger.error(
                 f"metadata file {file_path} present but does not contain valid yaml"
             )
