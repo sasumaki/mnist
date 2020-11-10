@@ -42,7 +42,8 @@ class Mnist(SeldonComponent):
 
     try:
       with open(file_path, "r") as f:
-        return yaml.safe_load(f.read())
+        self.metadata = yaml.safe_load(f.read())
+        return self.metadata
    
     except FileNotFoundError:
       print(f"metadata file {file_path} does not exist")
@@ -70,7 +71,10 @@ class Mnist(SeldonComponent):
     return SeldonResponse(data=res, metrics=runtime_metrics)
 
   def tags(self):
-    return {"model_uri": self.model_uri}
+    return {
+      "model_uri": self.model_uri,
+      "model_version": self.metadata["models"]["mnist"]["versions"][0]
+      }
     
   def _create_minio_client(self):
         # Adding prefixing "http" in urlparse is necessary for it to be the netloc
