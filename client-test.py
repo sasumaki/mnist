@@ -8,7 +8,7 @@ def test():
   ds = tfds.load(name="mnist", split="test", as_supervised=True)
 
 
-  sc = SeldonClient(deployment_name="mnist-model", namespace="seldon-system", gateway_endpoint="localhost:8086", gateway="istio")
+  sc = SeldonClient(deployment_name="mnist-model", namespace="seldon-system", gateway_endpoint="localhost:8081", gateway="istio")
   print(sc.config)
   test_size = 100
   corrects = 0
