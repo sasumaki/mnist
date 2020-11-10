@@ -51,18 +51,9 @@ class Mnist(SeldonComponent):
 
     res = self.session.run([self.output_name], {self.input_name: X.astype('float32')})
 
-    runtime_metrics = [{"type": "TIMER", "key": "prediction_time", "value": round((time.time() - start_time) * 1000)}]
+    runtime_metrics = [{"type": "TIMER", "key": "prediction_time", "value": ((time.time() - start_time) * 1000)}]
 
     return SeldonResponse(data=res, metrics=runtime_metrics)
-
-   
-
-  def metrics(self):
-    return [
-        {"type":"COUNTER","key":"request_counter","value":1}, # a counter which will increase by the given value
-        {"type":"GAUGE","key":"mygauge","value":100}, # a gauge which will be set to given value
-        {"type":"TIMER","key":"mytimer","value":20.2}, # a timer which will add sum and count metrics - assumed millisecs
-      ]
 
   def tags(self):
     return {"model_uri": self.model_uri}
