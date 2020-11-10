@@ -26,9 +26,9 @@ class Mnist(SeldonComponent):
     self.model_uri = model_uri
     self.method = method
     self.ready = False
-    out_dir = tempfile.mkdtemp()
+    self.out_dir = tempfile.mkdtemp()
     
-    model_file =  os.path.join(self._download_model(self.model_uri, out_dir), "model.onnx")
+    model_file =  os.path.join(self._download_model(self.model_uri, self.out_dir), "model.onnx")
 
     self._model = model_file
     self.session = rt.InferenceSession(self._model, None)
@@ -38,7 +38,7 @@ class Mnist(SeldonComponent):
     print("init and model loading done!!!")
  
     def init_metadata(self):
-        file_path = os.path.join(self.model_uri, "metadata.yaml")
+        file_path = os.path.join(self._download_model(self.model_uri, self.out_dir), "metadata.yaml"))
 
         try:
             with open(file_path, "r") as f:
