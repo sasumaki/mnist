@@ -15,7 +15,7 @@ import onnxruntime as rt
 import time
 from minio import Minio
 import tempfile
-
+import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -36,12 +36,21 @@ class Mnist(SeldonComponent):
     self.output_name = self.session.get_outputs()[0].name
     self.ready = True
     print("init and model loading done!!!")
-  # def init_metadata(self):
-  #   meta = {
-  #       "versions": [self.model_uri]
-  #   }
+ 
+    def init_metadata(self):
+        file_path = os.path.join(self.model_uri, "metadata.yaml")
 
-  #   return meta
+        try:
+            with open(file_path, "r") as f:
+                return yaml.safe_load(f.read())
+        except FileNotFoundError:
+            logger.debug(f"metadata file {file_path} does not exist")
+            return {}
+        except yaml.YAMLError:
+            logger.error(
+                f"metadata file {file_path} present but does not contain valid yaml"
+            )
+            return {}
 
   def predict(self, X, features_names):
     start_time = time.time()
