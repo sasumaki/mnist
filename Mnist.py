@@ -67,7 +67,7 @@ class Mnist(SeldonComponent):
   def tags(self,X):
     return {"model_uri": self.model_uri}
     
-  def _create_minio_client():
+  def _create_minio_client(self):
         # Adding prefixing "http" in urlparse is necessary for it to be the netloc
         url = urlparse(os.getenv("AWS_ENDPOINT_URL", "http://s3.amazonaws.com"))
         use_ssl = (
