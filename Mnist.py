@@ -36,13 +36,12 @@ class Mnist(SeldonComponent):
     self.output_name = self.session.get_outputs()[0].name
     self.ready = True
     print("init and model loading done!!!")
+  # def init_metadata(self):
+  #   meta = {
+  #       "versions": [self.model_uri]
+  #   }
 
-  def init_metadata(self):
-    meta = {
-        "versions": [self.model_uri]
-    }
-
-    return meta
+  #   return meta
 
   def predict(self, X, features_names):
     start_time = time.time()

@@ -3,3 +3,4 @@ MNIST_data
 spellbook.txt
 __pycache__
 .cache
+model_metadata.yaml
