@@ -64,7 +64,7 @@ class Mnist(SeldonComponent):
         {"type":"TIMER","key":"mytimer","value":20.2}, # a timer which will add sum and count metrics - assumed millisecs
       ]
 
-  def tags(self,X):
+  def tags(self):
     return {"model_uri": self.model_uri}
     
   def _create_minio_client(self):
