@@ -37,22 +37,26 @@ class Mnist(SeldonComponent):
     self.ready = True
     print("init and model loading done!!!")
  
-    def init_metadata(self):
-      file_path = os.path.join(self._download_model(self.model_uri, self.out_dir), "metadata.yaml"))
+  def init_metadata(self):
+    file_path = os.path.join(self._download_model(self.model_uri, self.out_dir), "metadata.yaml")
 
-      try:
-        with open(file_path, "r") as f:
-          return yaml.safe_load(f.read())
-      except FileNotFoundError:
-        print(f"metadata file {file_path} does not exist")
-        logger.debug(f"metadata file {file_path} does not exist")
-        return {}
-      except yaml.YAMLError:
-        print( f"metadata file {file_path} present but does not contain valid yaml")
-        logger.error(
-          f"metadata file {file_path} present but does not contain valid yaml"
-        )
-        return {}
+    try:
+      with open(file_path, "r") as f:
+        return yaml.safe_load(f.read())
+   
+    except FileNotFoundError:
+      print(f"metadata file {file_path} does not exist")
+      logger.debug(f"metadata file {file_path} does not exist")
+      return {}
+    
+    except yaml.YAMLError:
+      print( f"metadata file {file_path} present but does not contain valid yaml")
+      logger.error(
+        f"metadata file {file_path} present but does not contain valid yaml"
+      )
+      return {}
+    
+    return {}
 
   def predict(self, X, features_names):
     start_time = time.time()
