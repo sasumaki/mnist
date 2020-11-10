@@ -42,8 +42,8 @@ class Mnist(SeldonComponent):
 
     try:
       with open(file_path, "r") as f:
-        metadata = yaml.safe_load(f.read())
-        return self.metadata
+        self.mdata = yaml.safe_load(f.read())
+        return self.mdata
    
     except FileNotFoundError:
       print(f"metadata file {file_path} does not exist")
@@ -71,12 +71,11 @@ class Mnist(SeldonComponent):
     return SeldonResponse(data=res, metrics=runtime_metrics)
 
   def tags(self):
-    print(self.metadata)
-    print(type(self.metadata))
-
+    print(self.metadata())
+    print(self.mdata)
     return {
       "model_uri": self.model_uri,
-      "model_version": self.metadata["versions"][0]
+      "model_version": self.mdata["versions"][0]
       }
     
   def _create_minio_client(self):
