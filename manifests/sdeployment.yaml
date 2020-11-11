@@ -69,6 +69,8 @@ spec:
           value: s3://aiga-models/mnist1
       name: shadow-mnist
       type: MODEL
+      logger:
+        mode: all
     name: shadow-mnist
     shadow: true
     replicas: 1

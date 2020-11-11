@@ -77,7 +77,6 @@ class Mnist(SeldonComponent):
     return SeldonResponse(data=res, metrics=runtime_metrics)
 
   def tags(self):
-    print(self.mdata)
     tag = {
       "model_uri": self.model_uri,
       "model_version": self.mdata["versions"][0]
