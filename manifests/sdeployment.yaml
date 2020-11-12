@@ -70,6 +70,7 @@ spec:
       name: shadow-mnist
       type: MODEL
       logger:
+        url: http://message-dumper
         mode: all
     name: shadow-mnist
     shadow: true
