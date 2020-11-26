@@ -1,6 +1,7 @@
 name: Release application
 on:
   push:
+  workflow_dispatch:
 
 
 jobs:
@@ -35,7 +36,7 @@ jobs:
     needs: build-publish
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
 
     - name: download and install k3d
       run: curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
