@@ -2,7 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
 - ./sdeployment.yaml
-- ./gateway.yaml
 
 images:
 - name: MODEL_IMAGE
@@ -11,3 +10,12 @@ images:
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
   newTag: sha-be19d66
+
+configMapGenerator:
+- name: model-config
+  envs: [environment.properties]
+
+vars:
+- name: MODEL_URI
+  objref: { kind: ConfigMap, name: model_config, apiVersion: v1 }
+  fieldref: { fieldpath: data.MODEL_URI }

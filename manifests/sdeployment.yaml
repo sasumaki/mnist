@@ -26,14 +26,14 @@ spec:
               value:  https://s3.eu-west-2.amazonaws.com/
     graph:
       children: []
-      modelUri: s3://aiga-models/mnist1
+      modelUri: $(MODEL_URI)
       envSecretRefName: seldon-init-container-secret
       endpoint:
         type: REST
       parameters:
         - name: model_uri
           type: STRING
-          value: s3://aiga-models/mnist1
+          value: $(MODEL_URI)
       name: mnist
       type: MODEL
     name: mnist
@@ -59,14 +59,14 @@ spec:
               value:  https://s3.eu-west-2.amazonaws.com/
     graph:
       children: []
-      modelUri: s3://aiga-models/mnist1
+      modelUri: $(MODEL_URI)
       envSecretRefName: seldon-init-container-secret
       endpoint:
         type: REST
       parameters:
         - name: model_uri
           type: STRING
-          value: s3://aiga-models/mnist1
+          value: $(MODEL_URI)
       name: shadow-mnist
       type: MODEL
       logger:

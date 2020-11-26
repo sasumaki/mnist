@@ -4,3 +4,7 @@ spellbook.txt
 __pycache__
 .cache
 model_metadata.yaml
+model.onnx
+graph.proto
+model/variables
+model/saved_model.pb
