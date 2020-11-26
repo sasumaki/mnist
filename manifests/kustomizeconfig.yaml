@@ -1,0 +1,6 @@
+
+varReference:
+  - path: spec/predictors/graph/modelUri
+    kind: SeldonDeployment
+  - path: spec/predictors/graph/parameters/value
+    kind: SeldonDeployment

@@ -23,3 +23,6 @@ vars:
 - name: MODEL_URI
   objref: { kind: ConfigMap, name: model-config, apiVersion: v1 }
   fieldref: { fieldpath: data.MODEL_URI }
+
+configurations:
+  - kustomizeconfig.yaml
