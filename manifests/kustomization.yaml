@@ -11,10 +11,13 @@ images:
   newName: sasumaki/mnist
   newTag: sha-be19d66
 
+generatorOptions:
+ disableNameSuffixHash: true
+
 configMapGenerator:
 - name: model-config
-  envs: [environment.properties]
-
+  env: environment.properties
+  
 vars:
 - name: MODEL_URI
   objref: { kind: ConfigMap, name: model_config, apiVersion: v1 }
