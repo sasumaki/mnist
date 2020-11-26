@@ -88,12 +88,16 @@ jobs:
         curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
         chmod u+x ./kustomize
 
+    - run: cat ./manifests/kustomization.yaml
+
     -
       name: Update images
       working-directory: ./manifests
       run: |-
         ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
+
     - run: cat ./manifests/kustomization.yaml
+    
     - name: Apply deployment to cluster
       run: |
         kubectl apply -k ./manifests
