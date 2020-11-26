@@ -8,3 +8,4 @@ model.onnx
 graph.proto
 model/variables
 model/saved_model.pb
+manifests/kustomize
