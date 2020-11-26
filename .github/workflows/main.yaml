@@ -97,10 +97,10 @@ jobs:
         ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
 
     - run: cat ./manifests/kustomization.yaml
-    
+
     - name: Apply deployment to cluster
       run: |
-        kubectl apply -k ./manifests
+        kustomize build . | kubectl apply -f -
 
     - name: Sleep for 120 seconds
       uses: jakejarvis/wait-action@master
