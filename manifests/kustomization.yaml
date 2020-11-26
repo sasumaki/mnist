@@ -16,9 +16,10 @@ generatorOptions:
 
 configMapGenerator:
 - name: model-config
-  env: environment.properties
+  envs: 
+    - environment.properties
   
 vars:
 - name: MODEL_URI
-  objref: { kind: ConfigMap, name: model_config, apiVersion: v1 }
+  objref: { kind: ConfigMap, name: model-config, apiVersion: v1 }
   fieldref: { fieldpath: data.MODEL_URI }

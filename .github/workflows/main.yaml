@@ -99,6 +99,7 @@ jobs:
     - run: cat ./manifests/kustomization.yaml
 
     - name: Apply deployment to cluster
+      working-directory: ./manifests
       run: |
         kustomize build . | kubectl apply -f -
 
