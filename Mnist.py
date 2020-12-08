@@ -27,8 +27,8 @@ class Mnist(SeldonComponent):
     self.method = method
     self.ready = False
     self.out_dir = tempfile.mkdtemp()
-    
-    model_file =  os.path.join(self._download_model(self.model_uri, self.out_dir), "model.onnx")
+    self.local_folder = self._download_model(self.model_uri, self.out_dir)
+    model_file =  os.path.join(self.local_folder, "model.onnx")
 
     self._model = model_file
     print(self._model)
@@ -40,8 +40,10 @@ class Mnist(SeldonComponent):
  
   def init_metadata(self):
     print(self.model_uri, self.out_dir)
-    file_path = os.path.join(self._download_model(self.model_uri, self.out_dir), "metadata.yaml")
     print(os.listdir(self.out_dir))
+    print(os.listdir(self.local_folder))
+
+    file_path = os.path.join(self.local_folder, "metadata.yaml")
     try:
       with open(file_path, "r") as f:
         self.mdata = yaml.safe_load(f.read())
