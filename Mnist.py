@@ -39,8 +39,9 @@ class Mnist(SeldonComponent):
     print("init and model loading done!!!")
  
   def init_metadata(self):
+    print(self.model_uri, self.out_dir)
     file_path = os.path.join(self._download_model(self.model_uri, self.out_dir), "metadata.yaml")
-
+    print(os.listdir(self.out_dir))
     try:
       with open(file_path, "r") as f:
         self.mdata = yaml.safe_load(f.read())
