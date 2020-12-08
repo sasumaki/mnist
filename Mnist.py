@@ -65,7 +65,7 @@ class Mnist(SeldonComponent):
 
   def predict(self, X, features_names):
     start_time = time.time()
-    X = np.reshape(X, (1,1,28,28))
+    #X = np.reshape(X, (1,1,28,28))
     
 
     res = self.session.run([self.output_name], {self.input_name: X.astype('float32')})
