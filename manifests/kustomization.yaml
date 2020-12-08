@@ -9,7 +9,7 @@ images:
   newTag: lol4
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-3865778
+  newTag: sha-a65b515
 
 generatorOptions:
   disableNameSuffixHash: true
