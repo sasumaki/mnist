@@ -6,23 +6,27 @@ resources:
 images:
 - name: MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-be19d66
+  newTag: sha-3865778
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-be19d66
+  newTag: sha-3865778
 
 generatorOptions:
- disableNameSuffixHash: true
+  disableNameSuffixHash: true
 
 configMapGenerator:
-- name: model-config
-  envs: 
-    - environment.properties
+- envs:
+  - environment.properties
+  name: model-config
   
 vars:
-- name: MODEL_URI
-  objref: { kind: ConfigMap, name: model-config, apiVersion: v1 }
-  fieldref: { fieldpath: data.MODEL_URI }
+- fieldref:
+    fieldPath: data.MODEL_URI
+  name: MODEL_URI
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: model-config
 
 configurations:
-  - kustomizeconfig.yaml
+- kustomizeconfig.yaml
