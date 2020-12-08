@@ -7,11 +7,7 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 ENV MODEL_NAME Mnist
-ENV API_TYPE REST
 ENV SERVICE_TYPE MODEL
 ENV PERSISTENCE 0
-ENV INCLUDE_METRICS_IN_CLIENT_RESPONSE True
 
-CMD exec seldon-core-microservice $MODEL_NAME $API_TYPE --service-type $SERVICE_TYPE --persistence $PERSISTENCE
-
-
+CMD exec seldon-core-microservice $MODEL_NAME --service-type $SERVICE_TYPE --persistence $PERSISTENCE
