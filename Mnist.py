@@ -31,7 +31,8 @@ class Mnist(SeldonComponent):
     model_file =  os.path.join(self._download_model(self.model_uri, self.out_dir), "model.onnx")
 
     self._model = model_file
-    self.session = rt.InferenceSession(self._model, None)
+    print(self._model)
+    self.session = rt.InferenceSession(self._model)
     self.input_name = self.session.get_inputs()[0].name
     self.output_name = self.session.get_outputs()[0].name
     self.ready = True

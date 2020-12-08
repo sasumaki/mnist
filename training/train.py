@@ -2,6 +2,7 @@ import tensorflow as tf
 
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
 from tensorflow.keras import Model
+import onnxruntime as rt
 import keras2onnx
 
 mnist = tf.keras.datasets.mnist
@@ -90,7 +91,11 @@ for epoch in range(EPOCHS):
     f'Test Loss: {test_loss.result()}, '
     f'Test Accuracy: {test_accuracy.result() * 100}'
   )
-  onnx_model = keras2onnx.convert_keras(model, "mnist")
+onnx_model = keras2onnx.convert_keras(model, "mnist")
 
-  temp_model_file = './outputs/model.onnx'
-  keras2onnx.save_model(onnx_model, temp_model_file)
+temp_model_file = './outputs/model.onnx'
+keras2onnx.save_model(onnx_model, temp_model_file)
+print("trying shit")
+session = rt.InferenceSession(temp_model_file)
+input_name = session.get_inputs()[0].name
+output_name = session.get_outputs()[0].name
