@@ -83,7 +83,7 @@ class Mnist(SeldonComponent):
       return tag
     except:
       return {
-        "model_uri": "no metadata",
+        "model_uri":  self.model_uri,
         "model_version": "no metadata"
         }
     
