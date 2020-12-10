@@ -78,13 +78,13 @@ class Mnist(SeldonComponent):
     try:
       tag = {
         "model_uri": self.model_uri,
-        "model_version": self.mdata["versions"][0]
+        "metadata": self.mdata
         }
       return tag
     except:
       return {
         "model_uri":  self.model_uri,
-        "model_version": "no metadata"
+        "metadata": "no metadata"
         }
     
   def _create_minio_client(self):
