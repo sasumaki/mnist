@@ -71,21 +71,21 @@ class Mnist(SeldonComponent):
     res = self.session.run([self.output_name], {self.input_name: X.astype('float32')})
 
     runtime_metrics = [{"type": "TIMER", "key": "prediction_time", "value": ((time.time() - start_time) * 1000)}]
-    try:
-      print(self.metadata)
-      print(self.metadata())
-
-    except:
-      print("lol failed")
 
     return SeldonResponse(data=res, metrics=runtime_metrics)
 
   def tags(self):
-    tag = {
-      "model_uri": self.model_uri,
-      "model_version": self.mdata["versions"][0]
-      }
-    return tag
+    try:
+      tag = {
+        "model_uri": self.model_uri,
+        "model_version": self.mdata["versions"][0]
+        }
+      return tag
+    except:
+      return {
+        "model_uri": "no metadata",
+        "model_version": "no metadata"
+        }
     
   def _create_minio_client(self):
         # Adding prefixing "http" in urlparse is necessary for it to be the netloc
