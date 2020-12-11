@@ -1,13 +1,38 @@
 import tensorflow as tf
-
+import os
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
 from tensorflow.keras import Model
 import onnxruntime as rt
 import keras2onnx
+import numpy as np
+import gzip
 
-mnist = tf.keras.datasets.mnist
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
+def load_data(path, num_images=5, image_size=28):
+  f = gzip.open("./data/" + path,'r')
+  print(path)
+  if image_size < 28:
+    f.read(8)
+  else:
+    f.read(16)
+  buf = f.read(image_size * image_size * num_images)
+  data = np.frombuffer(buf, dtype=np.uint8).astype(np.float32)
+  print(data.shape)
+  data = data.reshape(num_images, image_size, image_size)
+  return data
+
+
+data_paths = os.listdir("./data")
+print(data_paths)
+test_paths = list(filter(lambda x: "t10k" in x , data_paths))
+test_images_path = list(filter(lambda x: "images" in x , test_paths))[0]
+test_labels_path = list(filter(lambda x: "labels" in x , test_paths))[0]
+train_paths = list(filter(lambda x: "train" in x , data_paths))
+train_images_path = list(filter(lambda x: "images" in x , train_paths))[0]
+train_labels_path = list(filter(lambda x: "labels" in x , train_paths))[0]
+
+(x_train, y_train), (x_test, y_test) = (load_data(train_images_path, 60_000), load_data(train_labels_path, 60_000, 1)), (load_data(test_images_path, 10_000), load_data(test_labels_path, 10_000, 1))
+
 x_train, x_test = x_train / 255.0, x_test / 255.0
 
 # Add a channels dimension
