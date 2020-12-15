@@ -36,6 +36,9 @@ spec:
           value: $(MODEL_URI)
       name: mnist
       type: MODEL
+      logger:
+        mode: all
+        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/kafka-backed-broker
     name: mnist
     replicas: 1
 
@@ -69,9 +72,6 @@ spec:
           value: $(MODEL_URI)
       name: shadow-mnist
       type: MODEL
-      logger:
-        mode: all
-        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/kafka-backed-broker
     name: shadow-mnist
     shadow: true
     replicas: 1
