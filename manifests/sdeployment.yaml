@@ -71,9 +71,7 @@ spec:
       type: MODEL
       logger:
         mode: all
-        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/default
+        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/kafka-backed-broker
     name: shadow-mnist
     shadow: true
     replicas: 1
-
-      

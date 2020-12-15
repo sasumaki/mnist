@@ -6,6 +6,7 @@ import onnxruntime as rt
 import keras2onnx
 import numpy as np
 import gzip
+import yaml
 
 
 def load_data(path, num_images=5, image_size=28):
@@ -71,6 +72,9 @@ train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy
 test_loss = tf.keras.metrics.Mean(name='test_loss')
 test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
 
+model.compile(optimizer=optimizer,
+              loss=train_loss,
+              metrics=[train_accuracy])
 @tf.function
 def train_step(images, labels):
   with tf.GradientTape() as tape:
@@ -94,7 +98,7 @@ def test_step(images, labels):
   test_loss(t_loss)
   test_accuracy(labels, predictions)
 
-EPOCHS = 5
+EPOCHS = 1
 
 for epoch in range(EPOCHS):
   # Reset the metrics at the start of the next epoch
@@ -120,7 +124,24 @@ onnx_model = keras2onnx.convert_keras(model, "mnist")
 
 temp_model_file = './outputs/model.onnx'
 keras2onnx.save_model(onnx_model, temp_model_file)
+
+metadata = {
+  'training_statistics' : {
+    'train_accuracy' : train_accuracy.result().numpy().item(),
+    'test_accuracy' : test_accuracy.result().numpy().item(),
+    'train_loss' : train_loss.result().numpy().item(),
+    'test_loss' : test_loss.result().numpy().item(),
+    'Epochs' : EPOCHS
+    }
+  }
+print(metadata)
+
+with open(r'./outputs/metadata.yaml', 'w') as file:
+    documents = yaml.dump(metadata, file)
+
 print("trying shit")
 session = rt.InferenceSession(temp_model_file)
 input_name = session.get_inputs()[0].name
 output_name = session.get_outputs()[0].name
+
+
