@@ -38,7 +38,7 @@ spec:
       type: MODEL
       logger:
         mode: all
-        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/nats-broker
+        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/nats-broker2
     name: mnist
     replicas: 1
 
