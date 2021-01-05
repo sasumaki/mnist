@@ -10,3 +10,7 @@ model/variables
 model/saved_model.pb
 manifests/kustomize
 training/data
+training/outputs
+wrapper/build
+wrapper/aiga_train.egg-info
+wrapper/dist

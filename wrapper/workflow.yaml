@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: meme-
+  namespace: argo
+spec:
+  entrypoint: flow 
+  templates:
+  - name: flow
+    steps:
+      - - name: train
+          template: training
+          arguments:
+            parameters:
+              - name: lol
+                value: beer
+              - name: epochs
+                value: 5
+
+
+  - name: training
+    container:
+      image: sasumaki/lol-train
+      args: [aiga_train, Train, --parameters, "{{inputs.parameters}}"] 
+    inputs:
+      parameters:
+        - name: lol
+        - name: epochs

@@ -20,19 +20,16 @@ import yaml
 logger = logging.getLogger(__name__)
 
 class Mnist(SeldonComponent):
-  def __init__(self, model_uri: str = None,  method: str = "predict", modelUri: str = None, type: str = None):
-    
+  def __init__(self, model_uri: str = None,  method: str = "predict", modelUri: str = None, type: str = None): 
     super().__init__()
     self.model_uri = model_uri
     self.method = method
     self.ready = False
     self.out_dir = tempfile.mkdtemp()
     self.local_folder = self._download_model(self.model_uri, self.out_dir)
-    model_file =  os.path.join(self.local_folder, "model.onnx")
+    self._model_file =  os.path.join(self.local_folder, "model.onnx")
 
-    self._model = model_file
-    print(self._model)
-    self.session = rt.InferenceSession(self._model)
+    self.session = rt.InferenceSession(self._model_file)
     self.input_name = self.session.get_inputs()[0].name
     self.output_name = self.session.get_outputs()[0].name
     self.ready = True
@@ -65,9 +62,6 @@ class Mnist(SeldonComponent):
 
   def predict(self, X, features_names):
     start_time = time.time()
-    #X = np.reshape(X, (1,1,28,28))
-    
-
     res = self.session.run([self.output_name], {self.input_name: X.astype('float32')})
 
     runtime_metrics = [{"type": "TIMER", "key": "prediction_time", "value": ((time.time() - start_time) * 1000)}]
