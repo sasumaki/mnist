@@ -1,0 +1,27 @@
+apiVersion: machinelearning.seldon.io/v1alpha2
+kind: SeldonDeployment
+metadata:
+  name: mnist-model
+  namespace: seldon-system
+spec:
+  name: mnist-model
+  protocol: kfserving
+  predictors:
+    graph:
+      implementation: TRITON_SERVER
+      children: []
+      modelUri: $(MODEL_URI)
+      envSecretRefName: seldon-init-container-secret
+      endpoint:
+        type: REST
+      parameters:
+        - name: model_uri
+          type: STRING
+          value: $(MODEL_URI)
+      name: mnist
+      type: MODEL
+      logger:
+        mode: all
+        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/nats-broker2
+    name: mnist
+    replicas: 1
