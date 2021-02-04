@@ -67,7 +67,7 @@ def main():
   user_method(**parsed)
 
 
-  metadata_yaml = r"./outputs/metadata.yaml"
+  metadata_yaml = r"./outputs/training_metadata.yaml"
   if "metadata_file" in parsed:
     metadata_yaml = parsed["metadata_file"]
 

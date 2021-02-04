@@ -12,7 +12,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def train(lol="lal", epochs=1, metadata_file=r"./outputs/metadata.yaml"):
+def train(lol="lal", epochs=1, metadata_file=r"./outputs/training_metadata.yaml", learning_rate=0.001):
   print(__name__)
   logger.info(lol)
 
@@ -71,7 +71,7 @@ def train(lol="lal", epochs=1, metadata_file=r"./outputs/metadata.yaml"):
 
   loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 
-  optimizer = tf.keras.optimizers.Adam()
+  optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate)
 
   train_loss = tf.keras.metrics.Mean(name='train_loss')
   train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
