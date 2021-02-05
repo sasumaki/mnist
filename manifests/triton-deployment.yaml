@@ -7,7 +7,7 @@ spec:
   name: mnist-model
   protocol: kfserving
   predictors:
-    graph:
+  - graph:
       implementation: TRITON_SERVER
       children: []
       modelUri: $(MODEL_URI)
