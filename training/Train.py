@@ -129,7 +129,8 @@ def train(lol="lal", epochs=1, metadata_file=r"./outputs/training_metadata.yaml"
     })
     )
   print("saving???")
-  model.save("outputs")
+  
+  model.save("outputs/mnist", save_format='tf')
   # onnx_model = keras2onnx.convert_keras(model, "mnist")
 
   # temp_model_file = './outputs/model.onnx'
