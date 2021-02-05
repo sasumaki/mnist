@@ -8,7 +8,7 @@ spec:
   predictors:
   - graph:
       implementation: TRITON_SERVER
-      modelUri: $(MODEL_URI)
+      modelUri: s3://aiga-models/mnist-4m59n-4092860028
       envSecretRefName: seldon-init-container-secret
       name: mnist
       logger:
