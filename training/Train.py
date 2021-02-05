@@ -128,10 +128,12 @@ def train(lol="lal", epochs=1, metadata_file=r"./outputs/training_metadata.yaml"
       "Test Accuracy": test_accuracy.result().numpy().item() * 100
     })
     )
-  onnx_model = keras2onnx.convert_keras(model, "mnist")
+  print("saving???")
+  model.save("outputs")
+  # onnx_model = keras2onnx.convert_keras(model, "mnist")
 
-  temp_model_file = './outputs/model.onnx'
-  keras2onnx.save_model(onnx_model, temp_model_file)
+  # temp_model_file = './outputs/model.onnx'
+  # keras2onnx.save_model(onnx_model, temp_model_file)
 
   metadata = {
     'training_statistics' : {
@@ -148,8 +150,8 @@ def train(lol="lal", epochs=1, metadata_file=r"./outputs/training_metadata.yaml"
       documents = yaml.dump(metadata, file)
 
   logger.info("trying shit")
-  session = rt.InferenceSession(temp_model_file)
-  input_name = session.get_inputs()[0].name
-  output_name = session.get_outputs()[0].name
+  # session = rt.InferenceSession(temp_model_file)
+  # input_name = session.get_inputs()[0].name
+  # output_name = session.get_outputs()[0].name
 
 
