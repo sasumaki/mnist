@@ -3,13 +3,13 @@ kind: Kustomization
 resources:
 - ./triton-deployment.yaml
 
-images:
-- name: MODEL_IMAGE
-  newName: sasumaki/mnist
-  newTag: sha-6abae42
-- name: SHADOW_MODEL_IMAGE
-  newName: sasumaki/mnist
-  newTag: sha-a65b515
+# images:
+# - name: MODEL_IMAGE
+#   newName: sasumaki/mnist
+#   newTag: sha-6abae42
+# - name: SHADOW_MODEL_IMAGE
+#   newName: sasumaki/mnist
+#   newTag: sha-a65b515
 
 generatorOptions:
   disableNameSuffixHash: true
