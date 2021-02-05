@@ -11,8 +11,8 @@ spec:
       modelUri: s3://aiga-models/mnist-4m59n-4092860028
       envSecretRefName: seldon-init-container-secret
       name: mnist
-      logger:
-        mode: all
-        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/nats-broker2
+      # logger:
+      #   mode: all
+      #   url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/nats-broker2
     name: mnist
     replicas: 1
