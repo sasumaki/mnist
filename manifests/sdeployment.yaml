@@ -26,16 +26,19 @@ spec:
               value:  https://s3.eu-west-2.amazonaws.com/
     graph:
       children: []
-      modelUri: s3://aiga-models/mnist1
+      modelUri: $(MODEL_URI)
       envSecretRefName: seldon-init-container-secret
       endpoint:
         type: REST
       parameters:
         - name: model_uri
           type: STRING
-          value: s3://aiga-models/mnist1
+          value: $(MODEL_URI)
       name: mnist
       type: MODEL
+      logger:
+        mode: all
+        url: http://broker-ingress.knative-eventing.svc.cluster.local/seldon-system/nats-broker2
     name: mnist
     replicas: 1
 
@@ -59,18 +62,16 @@ spec:
               value:  https://s3.eu-west-2.amazonaws.com/
     graph:
       children: []
-      modelUri: s3://aiga-models/mnist1
+      modelUri: $(MODEL_URI)
       envSecretRefName: seldon-init-container-secret
       endpoint:
         type: REST
       parameters:
         - name: model_uri
           type: STRING
-          value: s3://aiga-models/mnist1
+          value: $(MODEL_URI)
       name: shadow-mnist
       type: MODEL
     name: shadow-mnist
     shadow: true
     replicas: 1
-
-      

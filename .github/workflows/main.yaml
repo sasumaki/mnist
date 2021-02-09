@@ -1,6 +1,7 @@
 name: Release application
 on:
   push:
+  workflow_dispatch:
 
 
 jobs:
@@ -35,7 +36,7 @@ jobs:
     needs: build-publish
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
 
     - name: download and install k3d
       run: curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
@@ -93,9 +94,14 @@ jobs:
       run: |-
         ./kustomize edit set image MODEL_IMAGE="sasumaki/mnist:sha-${{ steps.slug.outputs.sha7 }}"
 
+    - name: Apply gateway
+      working-directory: ./manifests
+      run: kubectl apply -f gateway.yaml
+
     - name: Apply deployment to cluster
+      working-directory: ./manifests
       run: |
-        kubectl apply -k ./manifests
+        kustomize build . | kubectl apply -f -
 
     - name: Sleep for 120 seconds
       uses: jakejarvis/wait-action@master

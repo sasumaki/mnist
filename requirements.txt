@@ -1,4 +1,4 @@
-seldon-core==v1.2.3
+seldon-core
 numpy
 pillow
 opencv-python
@@ -6,3 +6,4 @@ joblib
 typing
 onnx
 onnxruntime
+minio

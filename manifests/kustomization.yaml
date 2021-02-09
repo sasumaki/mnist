@@ -1,13 +1,33 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- ./gateway.yaml
 - ./sdeployment.yaml
+- ./triton.yaml
 
 images:
 - name: MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-5e38ad8
+  newTag: sha-6abae42
 - name: SHADOW_MODEL_IMAGE
   newName: sasumaki/mnist
-  newTag: sha-5e38ad8
+  newTag: sha-a65b515
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+- envs:
+  - environment.properties
+  name: model-config
+  
+vars:
+- fieldref:
+    fieldPath: data.MODEL_URI
+  name: MODEL_URI
+  objref:
+    apiVersion: v1
+    kind: ConfigMap
+    name: model-config
+
+configurations:
+- kustomizeconfig.yaml

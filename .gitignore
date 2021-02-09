@@ -3,3 +3,14 @@ MNIST_data
 spellbook.txt
 __pycache__
 .cache
+model_metadata.yaml
+model.onnx
+graph.proto
+model/variables
+model/saved_model.pb
+manifests/kustomize
+training/data
+training/outputs
+wrapper/build
+wrapper/aiga_train.egg-info
+wrapper/dist

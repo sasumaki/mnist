@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  train:
+    image: sasumaki/mnist-train
+    volumes:
+      - ./outputs:/app/outputs
