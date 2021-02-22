@@ -14,11 +14,12 @@ def test():
   corrects = 0
   data = ds.take(test_size).cache()
   for image, label in data:
+      x = np.array(image).reshape(1, 28, 28, 1)
 
     # plt.imshow(data.reshape(28,28))
     # plt.colorbar()
     # plt.show()
-    r = sc.predict(data=np.array(image), gateway="istio",transport="rest")
+    r = sc.predict(data=x, gateway="istio",transport="rest")
     print("!!!")
     print(r.msg)
     print("!!!")
