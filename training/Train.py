@@ -12,7 +12,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def train(lol="lal", epochs=1, metadata_file=r"./outputs/training_metadata.yaml", learning_rate=0.001):
+def train(lol="lal", epochs=1, metadata_file=r"./outputs/training_metadata.yaml", learning_rate=0.001, version="1"):
   print(__name__)
   logger.info(lol)
 
@@ -144,8 +144,16 @@ def train(lol="lal", epochs=1, metadata_file=r"./outputs/training_metadata.yaml"
     }
   logger.info((metadata))
 
+  acual_metadata = {
+    "name" : "mnist",
+    "versions" : [ version ]
+  }
+
   with open(metadata_file, 'w') as file:
       documents = yaml.dump(metadata, file)
+  
+  with open("./outputs/metadata.yaml", 'w') as file:
+      documents = yaml.dump(acual_metadata, file)
 
   logger.info("trying shit")
   session = rt.InferenceSession(temp_model_file)

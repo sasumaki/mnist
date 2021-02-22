@@ -19,7 +19,9 @@ def test():
     # plt.colorbar()
     # plt.show()
     r = sc.predict(data=np.array(image), gateway="istio",transport="rest")
+    print("!!!")
     print(r.msg)
+    print("!!!")
     assert(r.success==True)
 
     res = r.response['data']['tensor']['values']
