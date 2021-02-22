@@ -14,7 +14,7 @@ def test():
   corrects = 0
   data = ds.take(test_size).cache()
   for image, label in data:
-      x = np.array(image).reshape(1, 28, 28, 1)
+    x = np.array(image).reshape(1, 28, 28, 1)
 
     # plt.imshow(data.reshape(28,28))
     # plt.colorbar()
